@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAnalytics } from '../api';
+import { getAnalytics, getPortfolio, getInvestment } from '../api';
 
 // --- Premium SVG Donut Chart ---
-function PremiumDonut({ data }) {
+export function PremiumDonut({ data }) {
   if (!data || data.length === 0) return <div style={{height:'200px', display:'flex', alignItems:'center', justifyContent:'center'}} className="c-muted">No Data</div>;
   
   const total = data.reduce((s, d) => s + d.value, 0);
@@ -53,7 +53,7 @@ function PremiumDonut({ data }) {
 }
 
 // --- Premium SVG Area Chart ---
-function PremiumAreaChart({ historyCurve }) {
+export function PremiumAreaChart({ historyCurve }) {
   if (!historyCurve || historyCurve.length === 0) return null;
 
   const validData = historyCurve.filter(h => h.value !== undefined);
@@ -105,11 +105,22 @@ function PremiumAreaChart({ historyCurve }) {
 export default function AnalyticsPage({ showToast }) {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+  const [portfolio, setPortfolio] = useState([]);
+  const [investmentData, setInvestmentData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
-    getAnalytics()
-      .then(res => setData(res))
+    Promise.all([
+      getAnalytics(),
+      getPortfolio(),
+      getInvestment()
+    ])
+      .then(([aData, pData, iData]) => {
+        setData(aData);
+        setPortfolio(pData.portfolio || []);
+        setInvestmentData(iData.investment || null);
+      })
       .catch(err => showToast(err.message, 'error'))
       .finally(() => setLoading(false));
   }, [showToast]);
@@ -198,6 +209,65 @@ export default function AnalyticsPage({ showToast }) {
                  </div>
               ))}
               {themeDistribution.length === 0 && <div className="t-label-sm c-muted text-center" style={{marginTop:'1rem'}}>No investments yet</div>}
+           </div>
+        </div>
+
+        {/* Detailed Metrics Table */}
+        <div className="card">
+           <h3 className="t-title" style={{ marginBottom: '1rem' }}>Detailed Metrics</h3>
+           <p className="t-label-sm c-muted" style={{ marginBottom: '1rem', textTransform: 'none' }}>Tap a fund to see history</p>
+           
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+             {portfolio.map(p => {
+                const pDiff = p.currentVal - p.invested;
+                const pPercent = p.invested > 0 ? ((pDiff / p.invested) * 100).toFixed(2) : 0;
+                const isExpanded = expandedId === p.id;
+                
+                // Get history for this fund
+                const fundHistory = investmentData?.history?.filter(h => h[p.id] > 0) || [];
+
+                return (
+                  <div key={p.id} style={{ background: 'var(--surface-container)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
+                    <div 
+                      onClick={() => setExpandedId(isExpanded ? null : p.id)}
+                      style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                    >
+                      <div>
+                        <p className="t-body" style={{ fontWeight: 600 }}>{p.name}</p>
+                        <p className="t-label-sm c-muted" style={{ marginTop: '0.2rem' }}>Invested: ₹{p.invested.toFixed(0)}</p>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <p className="t-h3" style={{ fontSize: '1.1rem' }}>₹{p.currentVal.toFixed(0)}</p>
+                        <p className="t-label-sm" style={{ color: pDiff >= 0 ? 'var(--secondary)' : 'var(--error)' }}>
+                          {pDiff >= 0 ? '+' : '-'}₹{Math.abs(pDiff).toFixed(1)} ({pPercent}%)
+                        </p>
+                      </div>
+                    </div>
+
+                    {isExpanded && (
+                       <div style={{ padding: '0 1rem 1rem', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+                         {fundHistory.length > 0 ? (
+                           <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                             <p className="t-label-sm c-muted">TRANSACTION HISTORY</p>
+                             {fundHistory.map((h, i) => (
+                               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: 'var(--surface-container-lowest)', borderRadius: 'var(--r-sm)' }}>
+                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <span className="mi mi-sm" style={{ color: 'var(--secondary)' }}>call_received</span>
+                                    <span className="t-body-sm">{new Date(h.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                                 </div>
+                                 <span className="t-body-sm" style={{ fontWeight: 600, color: 'var(--secondary)' }}>+₹{h[p.id].toFixed(2)}</span>
+                               </div>
+                             ))}
+                           </div>
+                         ) : (
+                           <p className="t-body-sm c-muted" style={{ marginTop: '0.75rem', textAlign: 'center' }}>No recent history</p>
+                         )}
+                       </div>
+                    )}
+                  </div>
+                );
+             })}
+             {portfolio.length === 0 && <div className="t-label-sm c-muted text-center" style={{padding:'1rem'}}>No detailed data available</div>}
            </div>
         </div>
 

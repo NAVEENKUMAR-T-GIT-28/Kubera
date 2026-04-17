@@ -149,20 +149,18 @@ export default function HomePage({ showToast }) {
           </div>
         </div>
 
-        {/* ─── Digital Gold Reserves Banner ─── */}
+        {/* ─── Portfolio Analysis Tag ─── */}
         <div style={{
-          background: 'linear-gradient(135deg, #1a0050 0%, #3b0070 50%, #5b0e8f 100%)',
-          borderRadius: 'var(--r-xl)', padding: '1.25rem', position: 'relative', overflow: 'hidden'
-        }}>
-          <div style={{ position: 'absolute', right: '-10px', bottom: '-10px', fontSize: '5rem', opacity: 0.15 }}>🏆</div>
-          <p className="t-label-sm" style={{ color: 'var(--tertiary-container)', marginBottom: '0.375rem' }}>SOVEREIGN WEALTH</p>
-          <h3 className="t-h3" style={{ color: '#fff', marginBottom: '0.375rem' }}>Digital Gold Reserves</h3>
-          <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.65)', marginBottom: '1rem' }}>
-            Secure your wealth with 24K 99.9% pure sovereign gold.
-          </p>
-          <button className="btn btn-lime btn-sm" onClick={() => navigate('/invest')} style={{ width: 'auto' }}>
-            <span className="mi mi-sm">arrow_forward</span> Allocate Now
-          </button>
+          background: 'var(--surface-container-low)',
+          borderRadius: 'var(--r-xl)', padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', border: '1px solid rgba(163, 145, 255, 0.15)'
+        }} onClick={() => navigate('/analytics')}>
+          <div>
+            <h3 className="t-h3" style={{ color: 'var(--brand)' }}>Deep Analytics</h3>
+            <p className="t-label-sm c-muted" style={{ marginTop: '0.2rem' }}>View portfolio data & returns</p>
+          </div>
+          <div className="icon-container ic-primary" style={{ background: 'transparent' }}>
+            <span className="mi">arrow_forward</span>
+          </div>
         </div>
 
         {/* ─── Recent People (from Stitch) ─── */}

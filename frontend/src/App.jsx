@@ -9,6 +9,8 @@ import PayPage       from './pages/PayPage';
 import HistoryPage   from './pages/HistoryPage';
 import CardPage      from './pages/CardPage';
 import InvestmentPage from './pages/InvestmentPage';
+import PortfolioPage from './pages/PortfolioPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 import SettingsPage  from './pages/SettingsPage';
 import BottomNav     from './components/BottomNav';
 
@@ -55,6 +57,8 @@ export default function App() {
         <Route path="/history" element={<Protected><WithNav><HistoryPage /></WithNav></Protected>} />
         <Route path="/cards"   element={<Protected><WithNav><CardPage   showToast={showToast} /></WithNav></Protected>} />
         <Route path="/invest"  element={<Protected><WithNav><InvestmentPage showToast={showToast} /></WithNav></Protected>} />
+        <Route path="/portfolio" element={<Protected><WithNav><PortfolioPage showToast={showToast} /></WithNav></Protected>} />
+        <Route path="/analytics" element={<Protected><WithNav><AnalyticsPage showToast={showToast} /></WithNav></Protected>} />
         <Route path="/settings" element={<Protected><WithNav><SettingsPage showToast={showToast} /></WithNav></Protected>} />
 
         {/* Pay page — full screen, NO bottom nav (flow replaces it) */}

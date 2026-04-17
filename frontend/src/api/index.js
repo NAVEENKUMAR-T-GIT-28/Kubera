@@ -158,4 +158,19 @@ export async function investNow() {
   });
 }
 
+export async function getPortfolio() {
+  return request('/investment/portfolio');
+}
+
+export async function sellAsset(asset, requestedPayout) {
+  return request('/investment/sell', {
+    method: 'POST',
+    body: JSON.stringify({ asset, requestedPayout })
+  });
+}
+
+export async function getAnalytics() {
+  return request('/investment/analytics');
+}
+
 export { getToken, getUser, clearAuth, setUser, setToken };

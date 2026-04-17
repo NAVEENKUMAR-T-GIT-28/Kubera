@@ -258,14 +258,27 @@ async function getHistory(req, res) {
 
     const total = await Transaction.countDocuments(query);
 
+    // Fetch names for peer accounts
+    const accountNumbersInTxns = [...new Set(transactions.flatMap(t => [t.fromAccount, t.toAccount]))];
+    const relatedAccounts = await BankAccount.find({ accountNumber: { $in: accountNumbersInTxns } }).lean();
+    const accountNameMap = relatedAccounts.reduce((map, acc) => {
+      map[acc.accountNumber] = acc.name;
+      return map;
+    }, {});
+
     // Enrich with direction info
     const enriched = transactions.map(txn => {
       const isDebit = txn.fromAccount === accountNumber;
+      const peerId = isDebit ? txn.toAccount : txn.fromAccount;
+      let peerName = accountNameMap[peerId] || peerId;
+      
+      if (isDebit && txn.merchantName) peerName = txn.merchantName;
+
       return {
         ...txn.toObject(),
         direction: isDebit ? 'sent' : 'received',
         displayAmount: isDebit ? `-₹${txn.amount}` : `+₹${txn.amount}`,
-        peerName: isDebit ? txn.merchantName : txn.fromAccount
+        peerName: peerName
       };
     });
 

@@ -153,7 +153,7 @@ export default function PayPage({ showToast }) {
         <button onClick={() => navigate('/')} style={{ display:'flex', alignItems:'center', gap:'0.25rem', color:'rgba(246,240,255,0.75)', marginBottom:'1.25rem', fontSize:'0.875rem', fontWeight:600, fontFamily:'var(--font-display)' }}>
           <span className="mi mi-sm">arrow_back</span> Back
         </button>
-        <h1 className="t-h2 c-on-primary">Royal Pay</h1>
+        <h1 className="t-h2 c-on-primary">Kubera</h1>
         <p style={{ color:'rgba(246,240,255,0.7)', fontSize:'0.875rem', marginTop:'0.25rem' }}>Scan any UPI QR to experience kubera transactions</p>
       </div>
 
@@ -185,43 +185,24 @@ export default function PayPage({ showToast }) {
           </div>
         )}
 
-        {/* Recent People */}
-        {!showScanner && (
+        {/* All Contacts Grid */}
+        {!showScanner && contacts.length > 0 && (
           <div>
-            <h3 className="t-label c-muted" style={{ letterSpacing:'0.05em', textTransform:'uppercase', marginBottom:'0.75rem', marginTop:'0.5rem' }}>Recent People</h3>
-            <div style={{ display:'flex', gap:'1rem', overflowX:'auto', paddingBottom:'0.25rem' }}>
+            <h3 className="t-label c-muted" style={{ letterSpacing:'0.05em', textTransform:'uppercase', marginBottom:'1rem', marginTop:'0.5rem' }}>All Contacts</h3>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', rowGap:'1.5rem', columnGap:'0.5rem' }}>
               {contacts.map((c, i) => (
-                <button key={i} onClick={() => select(c)} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'0.375rem', flexShrink:0 }}>
+                <button key={i} onClick={() => select(c)} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'0.5rem', background:'none', border:'none', cursor:'pointer' }}>
                   <div style={{
-                    width:'3.25rem', height:'3.25rem', borderRadius:'50%',
+                    width:'3.5rem', height:'3.5rem', borderRadius:'50%',
                     background:'linear-gradient(135deg, var(--primary-container), rgba(163,145,255,0.4))',
                     display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.5rem',
                     boxShadow:'0 4px 12px rgba(91,46,242,0.15)'
                   }}>
-                    {c.avatar || '🏪'}
+                    {c.avatar || (c.role === 'merchant' ? '🏪' : '👤')}
                   </div>
-                  <span className="t-label-sm c-muted" style={{ maxWidth:'3.75rem', textAlign:'center', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                  <span className="t-label-sm c-on-surface" style={{ width:'100%', textAlign:'center', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', fontSize: '0.7rem' }}>
                     {c.name?.split(' ')[0]}
                   </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Merchants list */}
-        {!showScanner && (
-          <div>
-            <h3 className="t-label c-muted" style={{ letterSpacing:'0.05em', textTransform:'uppercase', marginBottom:'0.75rem' }}>All Merchants</h3>
-            <div className="card">
-              {contacts.map((c, i) => (
-                <button key={i} className="txn-row" style={{ width:'100%', background:'none', cursor:'pointer', textAlign:'left' }} onClick={() => select(c)}>
-                  <div className="icon-container ic-primary" style={{ fontSize:'1.25rem' }}>{c.avatar || '🏪'}</div>
-                  <div style={{ flex:1 }}>
-                    <div className="txn-name">{c.name}</div>
-                    <div className="txn-sub">{c.phone} · {c.role}</div>
-                  </div>
-                  <span className="mi mi-sm c-muted">chevron_right</span>
                 </button>
               ))}
             </div>
@@ -332,7 +313,7 @@ export default function PayPage({ showToast }) {
                     +₹{activeRoundUp}
                   </p>
                   <p className="t-body-sm" style={{ color: activeRoundUp === 0 ? 'var(--muted)' : 'var(--secondary)', marginTop:'0.25rem' }}>
-                    {activeRoundUp === 0 ? 'Round-off skipped for this transaction.' : `The round-off amount of ₹${activeRoundUp}.00 will be instantly directed to your Royal Gold Reserve portfolio.`}
+                    {activeRoundUp === 0 ? 'Round-off skipped for this transaction.' : `The round-off amount of ₹${activeRoundUp}.00 will be instantly directed to your Kubera Gold Reserve portfolio.`}
                   </p>
                 </div>
               </div>
@@ -355,7 +336,7 @@ export default function PayPage({ showToast }) {
               {activeRoundUp > 0 && (
                 <div style={{ marginTop:'0.75rem', background:'rgba(0,105,69,0.1)', borderRadius:'var(--r-lg)', padding:'0.5rem 0.75rem', position:'relative', zIndex: 1 }}>
                   <p className="t-label-sm" style={{ color:'var(--secondary)' }}>
-                    <span className="mi mi-sm">lock</span> Authenticated via Biometric ID · Royal Account ✱✱✱✱{preview?.accountNumber || '9801'}
+                    <span className="mi mi-sm">lock</span> Authenticated via Biometric ID · Kubera Account ✱✱✱✱{preview?.accountNumber || '9801'}
                   </p>
                 </div>
               )}
@@ -395,7 +376,7 @@ export default function PayPage({ showToast }) {
       <div style={{ width:'4.5rem', height:'4.5rem', borderRadius:'50%', background:'var(--primary-container)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'1rem' }}>
         <span className="mi mi-xl c-primary">lock</span>
       </div>
-      <h2 className="t-h2" style={{ marginBottom:'0.25rem' }}>Enter Royal PIN</h2>
+      <h2 className="t-h2" style={{ marginBottom:'0.25rem' }}>Enter Kubera PIN</h2>
       <p className="t-body-sm c-muted">Authorising ₹{preview?.amount + activeRoundUp} to {selected?.name}</p>
 
       <div className="pin-dots" style={{ gap:'1.25rem' }}>

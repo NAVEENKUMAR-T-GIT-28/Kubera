@@ -77,16 +77,32 @@ async function getDashboard(req, res) {
         });
     }
 
+    // Get all unique account numbers involved in recent transactions
+    const accountNumbersInTxns = [...new Set(recentTxns.flatMap(t => [t.fromAccount, t.toAccount]))];
+    const relatedAccounts = await BankAccount.find({ accountNumber: { $in: accountNumbersInTxns } }).lean();
+    const accountNameMap = relatedAccounts.reduce((map, acc) => {
+      map[acc.accountNumber] = acc.name;
+      return map;
+    }, {});
+
     // Enrich recent transactions
     const enrichedTxns = recentTxns.map(txn => {
       const isDebit = txn.fromAccount === accountNumber;
+      // If debit, use merchant name if available, else look up the destination account name
+      // If credit, look up the source account name
+      const peerId = isDebit ? txn.toAccount : txn.fromAccount;
+      let peerName = accountNameMap[peerId] || peerId;
+      
+      // Override with merchantName if it's explicitly set on the transaction (mostly for debits)
+      if (isDebit && txn.merchantName) peerName = txn.merchantName;
+
       return {
         id: txn._id,
         direction: isDebit ? 'sent' : 'received',
         amount: txn.amount,
         roundUpAmount: txn.roundUpAmount,
         displayAmount: isDebit ? `-₹${txn.amount}` : `+₹${txn.amount}`,
-        peerName: isDebit ? txn.merchantName : txn.fromAccount,
+        peerName: peerName,
         category: txn.category,
         timestamp: txn.timestamp,
         status: txn.status

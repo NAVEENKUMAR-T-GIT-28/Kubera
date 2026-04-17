@@ -138,14 +138,15 @@ async function toggleCard(req, res) {
   }
 }
 
-// GET /api/bank/contacts — Get list of recent payees / all merchants
+// GET /api/bank/contacts — Get list of recent payees / all users
 async function getContacts(req, res) {
   try {
-    const merchants = await BankAccount.find({ role: 'merchant' }).select(
-      'accountNumber name phone avatar'
+    const { accountNumber } = req.user;
+    const users = await BankAccount.find({ accountNumber: { $ne: accountNumber } }).select(
+      'accountNumber name phone avatar role'
     );
 
-    return res.json({ success: true, contacts: merchants });
+    return res.json({ success: true, contacts: users });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Server error', error: err.message });
   }

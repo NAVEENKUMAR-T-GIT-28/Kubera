@@ -30,7 +30,7 @@ export default function SettingsPage({ showToast }) {
         threshold: settings.threshold,
         cycle: settings.cycle,
       });
-      showToast('Royal settings updated!');
+      showToast('Kubera settings updated!');
     } catch (err) { showToast(err.message, 'error'); }
     finally { setSaving(false); }
   }
@@ -68,12 +68,12 @@ export default function SettingsPage({ showToast }) {
               {user?.name?.[0]?.toUpperCase() || '👤'}
             </div>
             <div style={{ flex: 1 }}>
-              <p className="t-title">{user?.name || 'Royal Member'}</p>
+              <p className="t-title">{user?.name || 'Kubera Member'}</p>
               <p className="t-body-sm c-muted">{user?.phone}</p>
               <p className="t-label-sm c-muted" style={{ marginTop: '0.125rem' }}>A/C {user?.accountNumber}</p>
             </div>
             <span className="chip chip-primary">
-              <span className="mi mi-sm">verified</span> Royal
+              <span className="mi mi-sm">verified</span> Kubera
             </span>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function SettingsPage({ showToast }) {
           <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
             {saving
               ? <><span className="mi mi-sm">hourglass_empty</span> Saving…</>
-              : <><span className="mi mi-sm">save</span> Save Royal Settings</>
+              : <><span className="mi mi-sm">save</span> Save Kubera Settings</>
             }
           </button>
         </div>
@@ -171,8 +171,8 @@ export default function SettingsPage({ showToast }) {
           <h3 className="t-label c-muted" style={{ letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.875rem' }}>Security</h3>
           {[
             { icon: 'fingerprint', label: 'Biometric Auth', sub: 'FaceID / TouchID enabled', ic: 'ic-primary' },
-            { icon: 'shield',      label: 'AES-256 Encryption', sub: 'Military-grade protection', ic: 'ic-earn' },
-            { icon: 'verified',    label: 'Royal Certification', sub: 'Sovereign account verified', ic: 'ic-lime' },
+            { icon: 'shield', label: 'AES-256 Encryption', sub: 'Military-grade protection', ic: 'ic-earn' },
+            { icon: 'verified', label: 'Kubera Certification', sub: 'Sovereign account verified', ic: 'ic-lime' },
           ].map(s => (
             <div key={s.label} className="txn-row">
               <div className={`icon-container ${s.ic}`}>
@@ -193,11 +193,11 @@ export default function SettingsPage({ showToast }) {
           style={{ color: 'var(--error)', gap: '0.5rem' }}
           onClick={() => { clearAuth(); navigate('/login'); }}
         >
-          <span className="mi mi-sm">logout</span> Sign Out of Royal Account
+          <span className="mi mi-sm">logout</span> Sign Out of Kubera Account
         </button>
 
         <p className="t-label-sm c-muted" style={{ textAlign: 'center', paddingBottom: '0.5rem' }}>
-          Kubera v1.0 · The Royal Standard of Wealth
+          Kubera v1.0 · The Kubera Standard of Wealth
         </p>
       </div>
     </div>

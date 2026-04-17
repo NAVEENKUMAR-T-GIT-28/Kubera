@@ -5,6 +5,13 @@ const mongoose = require('mongoose');
 const app = express();
 
 // ── Middleware ──────────────────────────────────────────────
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -15,6 +22,8 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const investmentRoutes = require('./routes/investmentRoutes');
+const adminRoutes = require('./routes/adminRoutes'); // <-- newly added
+const chatRoutes = require('./routes/chatRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/bank', bankRoutes);
@@ -22,6 +31,8 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/investment', investmentRoutes);
+app.use('/api/admin', adminRoutes);          // <-- newly added
+app.use('/api/chat', chatRoutes);
 
 // ── Health Check ───────────────────────────────────────────
 app.get('/api/health', (req, res) => {

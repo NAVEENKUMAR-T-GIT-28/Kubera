@@ -34,7 +34,7 @@ export default function CardPage({ showToast }) {
       <div className="page-header">
         <h1 className="t-h2">My Cards</h1>
         <span className="chip chip-primary">
-          <span className="mi mi-sm">credit_card</span> Royal
+          <span className="mi mi-sm">credit_card</span> Kubera
         </span>
       </div>
 
@@ -174,7 +174,7 @@ export default function CardPage({ showToast }) {
             <span className="mi mi-md">shield</span>
           </div>
           <div>
-            <p className="t-label" style={{ color: 'var(--on-surface)', marginBottom: '0.125rem' }}>Royal Security Shield</p>
+            <p className="t-label" style={{ color: 'var(--on-surface)', marginBottom: '0.125rem' }}>Kubera Security Shield</p>
             <p className="t-body-sm c-muted">Military-grade encryption on all card transactions</p>
           </div>
         </div>

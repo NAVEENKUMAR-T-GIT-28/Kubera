@@ -26,6 +26,12 @@ const investmentAllocationSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  holdings: {
+    gold: { type: Number, default: 0 },
+    etf: { type: Number, default: 0 },
+    indexFund: { type: Number, default: 0 },
+    debtFund: { type: Number, default: 0 }
+  },
   lastInvestmentDate: {
     type: Date,
     default: null

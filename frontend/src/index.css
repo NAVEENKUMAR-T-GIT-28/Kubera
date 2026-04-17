@@ -99,7 +99,7 @@ ul, ol { list-style: none; }
 .mi-xl  { font-size: 2.5rem; }
 
 /* ── Typography ─────────────────────────────── */
-.t-display  { font-family: var(--font-display); font-size: 3.5rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+.t-display  { font-family: var(--font-display); font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
 .t-h1       { font-family: var(--font-display); font-size: 2rem;   font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; }
 .t-h2       { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
 .t-h3       { font-family: var(--font-display); font-size: 1.25rem;font-weight: 600; line-height: 1.3;  }

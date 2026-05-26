@@ -60,7 +60,7 @@ Collections:
 ## 📁 Project Structure
 
 ```bash
-/micro-invest-app
+/Kubera
   /backend
     /models
     /routes
@@ -69,9 +69,15 @@ Collections:
     server.js
 
   /frontend
-    /pages
-    /components
-    /api
+    /src
+      /pages
+      /components
+      /api
+
+  /admin-client
+    /src
+      /pages
+      /components
 ```
 
 ---
@@ -162,6 +168,23 @@ Collections:
 
 ---
 
+### 6. Card [NEW]
+
+```js
+{
+  accountId: String,
+  cardNumber: String,
+  cardType: "virtual" | "physical",
+  status: "active" | "blocked" | "expired",
+  cardName: String,
+  expiry: String,
+  cvv: String,
+  createdAt: Date
+}
+```
+
+---
+
 ## ⚡ Core Logic (Most Important Part)
 
 ### Round-Up Calculation
@@ -219,44 +242,65 @@ if (sparePool.totalSpare >= settings.threshold) {
 
 ## 🌐 API Endpoints
 
-### Auth (Simple)
+All backend endpoints are prefixed with `/api`.
 
+### Auth
 ```http
-POST /login
+POST /api/auth/register    --> Register a new bank account
+POST /api/auth/login       --> Login with phone + PIN (returns JWT)
+POST /api/auth/verify-pin  --> Verify transaction PIN
 ```
 
 ---
 
 ### Payment
-
 ```http
-POST /payment/pay
-GET  /payment/history
+POST /api/payment/pay      --> Execute a transaction with spare round-up
+GET  /api/payment/history  --> Retrieve transaction history
 ```
 
 ---
 
 ### Bank
-
 ```http
-GET /bank/balance
+GET  /api/bank/balance             --> Retrieve account balance
+GET  /api/bank/account             --> Retrieve bank account info
+GET  /api/bank/qr                  --> Get current user's QR string
+GET  /api/bank/qr/:accountNumber   --> Generate QR for a specific account
+GET  /api/bank/cards               --> Retrieve virtual/physical card list
+POST /api/bank/cards/toggle        --> Toggle status/type of bank cards
+GET  /api/bank/contacts            --> Fetch demo contacts list
+GET  /api/bank/lookup/:identifier  --> Find a user by phone or account number
 ```
 
 ---
 
-### Settings
-
+### Settings & Round-Ups
 ```http
-POST /settings/update
-GET  /settings
+GET  /api/settings         --> Retrieve current user round-up configurations
+POST /api/settings/update  --> Update round-up configuration parameters
 ```
 
 ---
 
-### Dashboard
-
+### Dashboard & Analytics
 ```http
-GET /dashboard
+GET  /api/dashboard        --> Get aggregated balance, investment, and chart data
+```
+
+---
+
+### AI Chatbot
+```http
+POST /api/chat             --> AI Assistant chat interface interaction
+```
+
+---
+
+### Admin Dashboards
+```http
+GET  /api/admin/overview         --> Fetch high-level admin metrics
+GET  /api/admin/deep-analytics   --> Fetch advanced user transaction charts
 ```
 
 ---
@@ -343,7 +387,7 @@ ngrok http 5173
 
 ## 🔥 Design Decisions (Keep It Simple)
 
-* No JWT / No bcrypt
+* JWT
 * PIN stored as plain string
 * LocalStorage for session
 * Fake QR = account number string
